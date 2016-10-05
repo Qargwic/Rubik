@@ -1,15 +1,19 @@
 package View;
 
 import Logic.Math3D.Math3D;
+import Logic.Math3D.PVector;
+import Logic.Math3D.Vector3;
 
 import java.awt.*;
 
-public class BigCube {
+public class BigCube{
 
     private final int EDGE = 20;
     private final int X=200;
     private final int Y=200;
     private final double miniEdge = 3;
+    private int distanceZ = 15;
+    private PVector pVector = new PVector(distanceZ);
 
     private MiniCube [] cubes = new MiniCube[26];
 
@@ -45,23 +49,26 @@ public class BigCube {
         for (int i = 0; i < 26; i++){
             cubes[i] = new MiniCube(X,Y,EDGE, coordX[i]*miniEdge,coordY[i]*miniEdge,coordZ[i]*miniEdge);
         }
+        //pVector.addAngle(40, 40);
     }
 
     public double [] getZ(){
         double [] ans = new double[26];
-        for (int i = 0; i<26; i++) ans[i] = cubes[i].zDist();
+        for (int i = 0; i<26; i++) ans[i] = cubes[i].zDist(pVector);
         return ans;
     }
 
-    public void turn(double x, double y, double z){
-
+    public void turnP(int dx, int dy){
+        pVector.addAngle(dx, dy);
+    }
+    public void released(){
+        pVector.setNorm();
     }
 
-    public void draw(Graphics g){
-        int [] sideSort = Math3D.sort(cubes[0].zDistToSides());
+    public void draw(Graphics2D g){
         int [] cubeSort = Math3D.sort(getZ());
         for (int i = 0; i<26; i++){
-            cubes[cubeSort[i]].draw(g,sideSort);
+            cubes[cubeSort[i]].draw(g, Math3D.proectionZ(pVector), pVector);
         }
     }
 

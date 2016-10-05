@@ -11,7 +11,6 @@ public class Matrix {
             matrix3[rawCount] = i;
             rawCount++;
         }
-
     }
 
     public Vector3 getVector(int i){

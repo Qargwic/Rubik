@@ -37,6 +37,10 @@ public class Vector3 {
         w = 1;
     }
 
+    public double getLen(){
+        return Math.sqrt(x*x + y*y + z*z);
+    }
+
     public double getRaw(int i){
         switch (i){
             case 0: return x;

@@ -2,9 +2,11 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
-public class GamePanel extends JPanel implements Runnable{
+public class GamePanel extends JPanel implements Runnable, MouseMotionListener {
     public static final int WIDTH = 400;
     public static final int HEIGHT = 400;
     public static final int SCALE = 1;
@@ -24,7 +26,7 @@ public class GamePanel extends JPanel implements Runnable{
         setFocusable(true);
         requestFocus();
     }
-
+    @Override
     public void run(){
 
         long startTime;
@@ -35,10 +37,11 @@ public class GamePanel extends JPanel implements Runnable{
 
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         g = (Graphics2D) image.getGraphics();
-
+        RenderingHints hints = new RenderingHints(
+                RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
+        );
+        g.setRenderingHints(hints);
         bigCube = new BigCube();
-
-        bigCube.turn(30, 0, 60);
 
         while(running){
             startTime = System.nanoTime();
@@ -52,14 +55,10 @@ public class GamePanel extends JPanel implements Runnable{
              try{
                  Thread.sleep(waitTime);
              } catch (Exception e){}
-
-
         }
     }
 
     private void gameUpdate(){
-        double a = 0.0001;
-        bigCube.turn(0,a,0);
     }
     private void gameRender(){
         g.setColor(Color.BLACK);
@@ -68,11 +67,9 @@ public class GamePanel extends JPanel implements Runnable{
         bigCube.draw(g);
     }
     private void gameDraw(){
-        Graphics g2 = this.getGraphics();
-        Graphics2D g2d = (Graphics2D) g.create();
-
-        g2.drawImage(image,0,0,null);
-        g2.dispose();
+        Graphics2D g2d = (Graphics2D) this.getGraphics();
+        g2d.drawImage(image,0,0,null);
+        g2d.dispose();
     }
 
     @Override
@@ -82,6 +79,35 @@ public class GamePanel extends JPanel implements Runnable{
             thread = new Thread(this);
             thread.start();
         }
+        addMouseMotionListener(this);
     }
+
+    private boolean pressed = false;
+    private int X;
+    private int Y;
+    private int sens = 10;
+    @Override
+    public void mouseDragged(MouseEvent e){
+        int x;
+        int y;
+        if (!pressed) {
+            X = e.getX();
+            Y = e.getY();
+        } else {
+            x = e.getX();
+            y = e.getY();
+            bigCube.turnP(sens*(x - X), -sens*(y - Y));
+            X = x;
+            Y = y;
+
+        }
+        pressed = true;
+    }
+    @Override
+    public void mouseMoved(MouseEvent e){
+        if (pressed) bigCube.released();
+        pressed = false;
+    }
+
 
 }

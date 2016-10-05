@@ -6,13 +6,13 @@ public class View3D {
 
     public static void main(String[] args){
 
-        JFrame window = new JFrame("Rubik");
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JFrame frame = new JFrame("Rubik");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        window.setContentPane(new GamePanel());
+        frame.setContentPane(new GamePanel());
 
-        window.pack();
-        window.setVisible(true);
+        frame.pack();
+        frame.setVisible(true);
     }
 
 

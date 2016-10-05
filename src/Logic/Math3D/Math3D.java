@@ -2,10 +2,14 @@ package Logic.Math3D;
 
 public class Math3D {
 
-    private static int[][] sides = {{0, 1, 2, 3}, {4, 7, 6, 5}, {0, 4, 5, 1}, {3, 2, 6, 7}, {0, 3, 7, 4}, {1, 5, 6, 2}};
+    public static double sq(double a){ return a*a;}
 
     public static Vector3 add(Vector3 a, Vector3 b){
         return new Vector3(a.x+b.x, a.y+b.y,a.z+b.z);
+    }
+
+    public static Vector3 sub(Vector3 a, Vector3 b){
+        return new Vector3(a.x-b.x, a.y-b.y,a.z-b.z);
     }
 
     public static double mult(Vector3 a, Vector3 b){
@@ -29,6 +33,11 @@ public class Math3D {
         return new Matrix(vec);
     }
 
+    public static double getCos(Vector3 a, Vector3 b, PVector v){
+        Vector3 b1 = sub(b, a);
+        Vector3 a1 = new Vector3(a.x - v.x, a.y - v.y, a.z - v.z);
+        return (a1.x*b1.x + a1.y*b1.y + a1.z*b1.z)/(a1.getLen()*b1.getLen());
+    }
 
     public static Matrix mult(Matrix ... mat){
         Matrix ans = mat[0];
@@ -43,6 +52,26 @@ public class Math3D {
                 new Vector3(1, 0, 0, 0),
                 new Vector3(0, 1, 0, 0),
                 new Vector3(0, 0, 0, -1/z),
+                new Vector3(0, 0, 0, 1),
+        });
+    }
+    public static Matrix proectionZ(PVector v){
+        return new Matrix(new Vector3 [] {
+                new Vector3(
+                        v.getCos('b')*v.getCos('g'),
+                        v.getCos('b')*v.getSin('g'),
+                        0,
+                        v.getSin('b')/v.getLen() ),
+                new Vector3(
+                        v.getCos('g')*v.getSin('a')*v.getSin('b') - v.getCos('a')*v.getSin('g'),
+                        v.getSin('g')*v.getSin('a')*v.getSin('b') + v.getCos('a')*v.getCos('g'),
+                        0,
+                        -v.getCos('b')*v.getSin('a')/v.getLen()),
+                new Vector3(
+                        v.getCos('g')*v.getCos('a')*v.getSin('b') + v.getSin('a')*v.getSin('g'),
+                        v.getCos('a')*v.getSin('b')*v.getSin('g') - v.getCos('g')*v.getSin('a'),
+                        0,
+                        -v.getCos('a')*v.getCos('b')/v.getLen()),
                 new Vector3(0, 0, 0, 1),
         });
     }
@@ -79,7 +108,7 @@ public class Math3D {
     }
     //Сотировка от меньшего
     public static int [] sort(double [] a){
-        double min = 100;
+        double min = a[0];
         int length = a.length;
         int [] ans = new int[length];
         for (int i = 0; i < length; i++) {
@@ -94,5 +123,6 @@ public class Math3D {
         }
         return ans;
     }
+
 
 }
